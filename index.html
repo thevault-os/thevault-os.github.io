@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAULT. — Awaken the quiet wealth within your walls</title>
+  <meta name="description" content="VAULT. identifies, values, and manages your physical assets — watches, electronics, and more. Know what you own and what it's worth, today." />
+  <meta property="og:title" content="VAULT. — Know what you own" />
+  <meta property="og:description" content="Photograph any asset. Get its current market value in under 90 seconds. Join the waitlist." />
+  <meta property="og:url" content="https://thevault-os.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --alabaster:   #EFECE6;
+      --charred:     #1A1A1A;
+      --brass:       #B5986C;
+      --brass-light: #C9AE89;
+      --walnut:      #352D27;
+      --taupe:       #D6CFC4;
+      --mushroom:    #9A8A7B;
+      --eucalyptus:  #849286;
+      --white:       #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--charred);
+      color: var(--alabaster);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN OVERLAY ─────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      border-bottom: 1px solid rgba(181, 152, 108, 0.15);
+      background: rgba(26, 26, 26, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--alabaster);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--brass); }
+
+    .nav-cta {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brass);
+      text-decoration: none;
+      border: 1px solid rgba(181, 152, 108, 0.4);
+      padding: 10px 24px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--brass);
+      color: var(--charred);
+      border-color: var(--brass);
+    }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 60%, rgba(181, 152, 108, 0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 20% 80%, rgba(53, 45, 39, 0.6) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 80% 20%, rgba(53, 45, 39, 0.4) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '—';
+      margin: 0 12px;
+      opacity: 0.4;
+    }
+
+    .hero-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--alabaster);
+      max-width: 900px;
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--brass);
+    }
+
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--mushroom);
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.6s forwards;
+    }
+
+    /* ── WAITLIST FORM ─────────────────────────────────────── */
+    .form-wrap {
+      width: 100%;
+      max-width: 520px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.8s forwards;
+      position: relative;
+      z-index: 2;
+    }
+
+    .form-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mushroom);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0;
+      border: 1px solid rgba(181, 152, 108, 0.3);
+      background: rgba(239, 236, 230, 0.04);
+      transition: border-color 0.3s ease;
+    }
+
+    .input-row:focus-within {
+      border-color: rgba(181, 152, 108, 0.7);
+    }
+
+    .input-row input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 16px 20px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--alabaster);
+      min-width: 0;
+    }
+
+    .input-row input::placeholder {
+      color: var(--mushroom);
+      opacity: 0.6;
+    }
+
+    .input-row button {
+      background: var(--brass);
+      border: none;
+      cursor: pointer;
+      padding: 16px 28px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--charred);
+      white-space: nowrap;
+      transition: background 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .input-row button:hover {
+      background: var(--brass-light);
+    }
+
+    .form-note {
+      font-size: 11px;
+      color: var(--mushroom);
+      margin-top: 12px;
+      opacity: 0.7;
+    }
+
+    .success-msg {
+      display: none;
+      background: rgba(132, 146, 134, 0.12);
+      border: 1px solid rgba(132, 146, 134, 0.3);
+      padding: 16px 24px;
+      text-align: center;
+    }
+
+    .success-msg p {
+      font-size: 13px;
+      color: var(--eucalyptus);
+    }
+
+    .success-msg strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      display: block;
+      margin-bottom: 4px;
+      color: var(--alabaster);
+    }
+
+    /* ── BRASS DIVIDER ─────────────────────────────────────── */
+    .brass-line {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--brass), transparent);
+      margin: 64px auto 0;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.2s forwards;
+    }
+
+    /* ── VALUE PROPS ───────────────────────────────────────── */
+    .props {
+      padding: 100px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(181, 152, 108, 0.12);
+    }
+
+    .prop {
+      background: var(--charred);
+      padding: 56px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prop::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 0;
+      background: var(--brass);
+      transition: height 0.4s ease;
+    }
+
+    .prop:hover::before { height: 100%; }
+
+    .prop-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      font-weight: 300;
+      color: rgba(181, 152, 108, 0.15);
+      line-height: 1;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .prop-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--alabaster);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .prop-body {
+      font-size: 14px;
+      color: var(--mushroom);
+      line-height: 1.7;
+    }
+
+    /* ── ASSET CATEGORIES ──────────────────────────────────── */
+    .categories {
+      padding: 100px 48px;
+      text-align: center;
+      border-top: 1px solid rgba(181, 152, 108, 0.1);
+    }
+
+    .section-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 300;
+      color: var(--alabaster);
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .section-sub {
+      font-size: 15px;
+      color: var(--mushroom);
+      max-width: 480px;
+      margin: 0 auto 64px;
+    }
+
+    .asset-grid {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      flex-wrap: wrap;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .asset-tag {
+      border: 1px solid rgba(181, 152, 108, 0.2);
+      padding: 12px 24px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mushroom);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .asset-tag:hover,
+    .asset-tag.active {
+      border-color: var(--brass);
+      color: var(--brass);
+      background: rgba(181, 152, 108, 0.05);
+    }
+
+    .asset-tag.coming-soon {
+      opacity: 0.35;
+      font-style: italic;
+    }
+
+    /* ── STAT ROW ──────────────────────────────────────────── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(181, 152, 108, 0.12);
+      margin: 100px 48px;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .stat {
+      background: var(--walnut);
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--brass);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mushroom);
+    }
+
+    /* ── HOW IT WORKS ──────────────────────────────────────── */
+    .how {
+      padding: 100px 48px;
+      max-width: 900px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(181, 152, 108, 0.1);
+    }
+
+    .how-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: rgba(181, 152, 108, 0.12);
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0;
+      background: var(--charred);
+      overflow: hidden;
+      transition: background 0.3s ease;
+    }
+
+    .step:hover { background: rgba(53, 45, 39, 0.6); }
+
+    .step-num {
+      background: rgba(181, 152, 108, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      color: rgba(181, 152, 108, 0.3);
+      border-right: 1px solid rgba(181, 152, 108, 0.12);
+    }
+
+    .step-content {
+      padding: 32px 40px;
+    }
+
+    .step-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--alabaster);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--mushroom);
+      line-height: 1.6;
+    }
+
+    .step-time {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--brass);
+      text-transform: uppercase;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    /* ── BOTTOM CTA ────────────────────────────────────────── */
+    .bottom-cta {
+      padding: 120px 48px;
+      text-align: center;
+      border-top: 1px solid rgba(181, 152, 108, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bottom-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(181, 152, 108, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .bottom-cta .hero-headline {
+      font-size: clamp(40px, 6vw, 72px);
+      margin-bottom: 24px;
+      animation: none;
+      opacity: 1;
+    }
+
+    .bottom-cta .hero-sub {
+      margin-bottom: 48px;
+      animation: none;
+      opacity: 1;
+    }
+
+    .bottom-cta .form-wrap {
+      opacity: 1;
+      animation: none;
+      margin: 0 auto;
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(181, 152, 108, 0.12);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--mushroom);
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: var(--mushroom);
+      opacity: 0.5;
+    }
+
+    /* ── ANIMATIONS ────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── MOBILE ────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-cta { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .props { grid-template-columns: 1fr; margin: 0 24px; }
+      .prop { padding: 40px 28px; }
+      .categories { padding: 80px 24px; }
+      .stats { grid-template-columns: 1fr; margin: 60px 24px; }
+      .how { padding: 80px 24px; }
+      .bottom-cta { padding: 80px 24px; }
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .input-row { flex-direction: column; }
+      .input-row button { width: 100%; }
+      .step { grid-template-columns: 60px 1fr; }
+      .step-content { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">VAULT<span>.</span></a>
+    <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <p class="hero-eyebrow">Private Beta — London</p>
+    <h1 class="hero-headline">Awaken the <em>quiet wealth</em><br>within your walls.</h1>
+    <p class="hero-sub">Know what you own. Know what it's worth. Today.</p>
+
+    <div class="form-wrap" id="waitlist">
+      <label class="form-label">Request early access</label>
+      <div class="input-row">
+        <input type="email" id="hero-email" placeholder="your@email.com" autocomplete="email" />
+        <button onclick="handleSignup('hero-email', 'hero-success')">Join Waitlist</button>
+      </div>
+      <p class="form-note">No spam. No noise. We'll reach out personally when your spot is ready.</p>
+      <div class="success-msg" id="hero-success">
+        <strong>You're on the list.</strong>
+        <p>We'll be in touch shortly. Thank you for your interest in VAULT.</p>
+      </div>
+    </div>
+
+    <div class="brass-line"></div>
+  </section>
+
+  <!-- VALUE PROPS -->
+  <section style="padding: 0 48px;">
+    <div class="props">
+      <div class="prop">
+        <span class="prop-number">01</span>
+        <h3 class="prop-title">Photograph any asset</h3>
+        <p class="prop-body">Point your camera at a watch, laptop, camera, or speaker. VAULT.'s AI identifies brand, model, and condition in seconds — no typing, no searching.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-number">02</span>
+        <h3 class="prop-title">Get the real market price</h3>
+        <p class="prop-body">Not the retail price. Not what you paid. The Vault Clearing Price — what you'd actually receive if you sold today, based on live marketplace data.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-number">03</span>
+        <h3 class="prop-title">Act on it instantly</h3>
+        <p class="prop-body">Resell via eBay with one tap. Request a repair. Donate to charity. Or simply track its value over time. Your assets, working for you.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-number">90s</div>
+      <div class="stat-label">Photo to valuation</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">£000s</div>
+      <div class="stat-label">Avg. dormant value per household</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">AI identification accuracy in testing</div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="categories">
+    <p class="section-eyebrow">Supported assets</p>
+    <h2 class="section-title">Built for the assets<br>that matter most</h2>
+    <p class="section-sub">VAULT. launches with watches and consumer electronics. More categories coming at Seed.</p>
+    <div class="asset-grid">
+      <div class="asset-tag active">Watches</div>
+      <div class="asset-tag active">Smartphones</div>
+      <div class="asset-tag active">Laptops</div>
+      <div class="asset-tag active">Cameras</div>
+      <div class="asset-tag active">Audio Equipment</div>
+      <div class="asset-tag active">Headphones</div>
+      <div class="asset-tag active">Tablets</div>
+      <div class="asset-tag active">Smart Home</div>
+      <div class="asset-tag coming-soon">Bicycles — coming soon</div>
+      <div class="asset-tag coming-soon">Jewellery — coming soon</div>
+      <div class="asset-tag coming-soon">Art — coming soon</div>
+      <div class="asset-tag coming-soon">Furniture — coming soon</div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="how-header">
+      <p class="section-eyebrow">How it works</p>
+      <h2 class="section-title">From photo<br>to portfolio</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4 class="step-title">Photograph your asset</h4>
+          <p class="step-desc">Open VAULT. and point your camera at any item. No barcodes, no serial numbers — just a photo.</p>
+          <span class="step-time">Under 5 seconds</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4 class="step-title">AI identifies and values it</h4>
+          <p class="step-desc">VAULT. identifies brand, model, and condition, then fetches live market data to calculate your Clearing Price.</p>
+          <span class="step-time">Under 90 seconds</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4 class="step-title">Your portfolio updates</h4>
+          <p class="step-desc">The asset is added to your VAULT. portfolio. Total value recalculated. Price tracked over time.</p>
+          <span class="step-time">Instantly</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4 class="step-title">Act when the moment is right</h4>
+          <p class="step-desc">Resell via eBay with Evri collection arranged. Request repair. Donate. Or hold and track. One tap, any direction.</p>
+          <span class="step-time">Your choice, your timeline</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="bottom-cta">
+    <p class="section-eyebrow">Private Beta — London · 2026</p>
+    <h2 class="hero-headline">Your home is a<br><em>portfolio.</em></h2>
+    <p class="hero-sub">Join the waitlist for early access.</p>
+    <div class="form-wrap">
+      <label class="form-label">Request early access</label>
+      <div class="input-row">
+        <input type="email" id="bottom-email" placeholder="your@email.com" autocomplete="email" />
+        <button onclick="handleSignup('bottom-email', 'bottom-success')">Join Waitlist</button>
+      </div>
+      <p class="form-note">Hand-selected beta. London-based households only for initial launch.</p>
+      <div class="success-msg" id="bottom-success">
+        <strong>You're on the list.</strong>
+        <p>We'll be in touch shortly. Thank you for your interest in VAULT.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">VAULT.</div>
+    <p class="footer-note">© 2026 VAULT. Ltd — Registered in England & Wales · Company No. 17105259</p>
+  </footer>
+
+  <script>
+    // ── WAITLIST SIGNUP ─────────────────────────────────────
+    // Replace the handleSignup function body with your
+    // Tally.so or other form endpoint when ready.
+    // For now it captures emails client-side and shows success.
+
+    function handleSignup(inputId, successId) {
+      const input = document.getElementById(inputId);
+      const success = document.getElementById(successId);
+      const email = input.value.trim();
+
+      if (!email || !email.includes('@')) {
+        input.style.borderBottom = '1px solid rgba(155, 90, 71, 0.6)';
+        input.placeholder = 'Please enter a valid email';
+        return;
+      }
+
+      fetch('https://tally.so/r/lbY69N', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, fields: { email: email } })
+      });
+
+      // Show success state
+      input.closest('.input-row').style.display = 'none';
+      input.closest('.form-wrap').querySelector('.form-note').style.display = 'none';
+      success.style.display = 'block';
+
+      // Store locally as fallback
+      const signups = JSON.parse(localStorage.getItem('vault_signups') || '[]');
+      signups.push({ email, timestamp: new Date().toISOString() });
+      localStorage.setItem('vault_signups', JSON.stringify(signups));
+    }
+
+    // Allow Enter key on email inputs
+    document.querySelectorAll('input[type="email"]').forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          const btn = input.closest('.input-row').querySelector('button');
+          btn.click();
+        }
+      });
+    });
+
+    // ── SCROLL ANIMATIONS ───────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.prop, .stat, .step, .asset-tag').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
